@@ -1,0 +1,14 @@
+{
+  "name": "pgn",
+  "version": "0.0.1",
+  "description": "JavaScript PGN parser",
+  "author": "Philippe Rathé <prathe@gmail.com>",
+  "dependencies": { "jsdom": "", "htmlparser": "" },
+  "directories": {
+    "lib" : "lib"
+  },
+  "mappings": {
+    "pgn": "./pgn/lib",
+    "qunit": "https://github.com/kof/node-qunit/zipball/master"
+  }
+}

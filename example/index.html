@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Testing PGN modules loading with RequireJS</title>
+
+  <script src="http://localhost/pgn.js/example/require.js" type="text/javascript"></script>
+
+  <script>
+    require({
+        "paths": {
+            "jquery": "http://ajax.googleapis.com/ajax/libs/jquery/1.4.3/jquery.min"
+        },
+        "packages": [
+            {
+                name: "pgn",
+                location: "http://localhost/pgn.js", // path to the pgn.js root directory
+            }
+        ],
+    },["jquery", "pgn"], function($, pgn) {
+        var h = pgn.parse("1. e4 e5 2. Nf3");
+        console.log(h);
+    });
+  </script>
+
+</head>
+<body>
+    <div></div>
+</body>
+</html>

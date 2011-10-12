@@ -1,0 +1,34 @@
+var assert = require('assert');
+var parser = require('../../lib/parser/comment').parser;
+
+parser.yy = {command: false};
+
+assert.deepEqual(parser.parse(''), []);
+assert.deepEqual(parser.parse('A comment'), ['A comment']);
+assert.deepEqual(parser.parse('A, comment'), ['A, comment']);
+assert.deepEqual(parser.parse('A\\ comment'), ['A\\ comment']);
+assert.deepEqual(parser.parse('A\\\\ comment'), ['A\\\\ comment']);
+assert.deepEqual(parser.parse('A[ comment'), ['A[ comment']);
+assert.deepEqual(parser.parse('A] comment'), ['A] comment']);
+assert.deepEqual(parser.parse('"A comment"'), ['"A comment"']);
+assert.deepEqual(parser.parse('A "string" in a comment'), ['A "string" in a comment']);
+assert.deepEqual(parser.parse('[%command operand]'), [{command:["operand"]}]);
+assert.deepEqual(parser.parse('[%command  operand]'), [{command:["operand"]}]);
+assert.deepEqual(parser.parse('[%command "operand"]'), [{command:["operand"]}]);
+assert.deepEqual(parser.parse('[%command "operand[%nocmd noop]"]'), [{command:["operand[%nocmd noop]"]}]);
+assert.deepEqual(parser.parse('\\[%command operand]'), ["\\[%command operand]"]);
+assert.deepEqual(parser.parse('\\\\[%command operand]'), ["\\\\",{command:["operand"]}]);
+assert.deepEqual(parser.parse('\\\\\\[%command operand]'), ["\\\\\\[%command operand]"]);
+assert.deepEqual(parser.parse('\\\\\\\\[%command operand]'), ["\\\\\\\\",{command:["operand"]}]);
+assert.deepEqual(parser.parse('\\\\\\\\\\[%command operand]'), ["\\\\\\\\\\[%command operand]"]);
+assert.deepEqual(parser.parse('\\[%command operand][%command operand]'), ["\\[%command operand]",{command:["operand"]}]);
+assert.deepEqual(parser.parse('[%command operand1,operand2]'), [{command:["operand1", "operand2"]}]);
+assert.deepEqual(parser.parse('[%command operand1,operand2,operand3]'), [{command:["operand1", "operand2","operand3"]}]);
+assert.deepEqual(parser.parse('[%command "operand1","operand2"]'), [{command:["operand1","operand2"]}]);
+assert.deepEqual(parser.parse('[%command "operand1","operand2",operand3]'), [{command:["operand1","operand2","operand3"]}]);
+assert.deepEqual(parser.parse('[%command operand1,"operand2",operand3]'), [{command:["operand1","operand2","operand3"]}]);
+assert.deepEqual(parser.parse('[%command "ope,ra,nd"]'), [{command:["ope,ra,nd"]}]);
+assert.deepEqual(parser.parse('[%command1 operand1][%command2 operand2]'), [{command1:["operand1"]},{command2:["operand2"]}]);
+assert.deepEqual(parser.parse('[%command1 "operand1][%command2 operand2]"'), [{command1:["operand1][%command2 operand2]"]}]);
+assert.deepEqual(parser.parse('Before [%command operand] after'), ["Before ",{command:["operand"]}," after"]);
+assert.deepEqual(parser.parse('Before [%command operand] middle [%command operand] after'), ["Before ",{command:["operand"]}," middle ",{command:["operand"]}," after"]);
